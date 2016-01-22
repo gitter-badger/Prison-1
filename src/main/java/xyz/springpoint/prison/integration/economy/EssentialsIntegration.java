@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.springpoint.prison.integration;
+package xyz.springpoint.prison.integration.economy;
 
 import ml.springpoint.springcore.integration.IntegrationAbstract;
 import org.bukkit.entity.Player;

@@ -54,10 +54,9 @@ public class Prison extends SpringPlugin {
     // =======================
 
     private boolean initIntegration() {
-        IntegrationFeature integration = (IntegrationFeature) getFeatureManager().get("integration");
-        this.integration = new IntegrationManager(integration);
-        // TODO Actually integrate using IntegrationManager
-        return true;
+        IntegrationFeature integrationFeature = (IntegrationFeature) getFeatureManager().get("integration");
+        integration = new IntegrationManager(integrationFeature);
+        return integration.initializePermissions() && integration.initializeEconomy();
     }
 
 }

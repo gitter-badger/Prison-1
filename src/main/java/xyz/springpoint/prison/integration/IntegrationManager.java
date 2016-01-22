@@ -17,7 +17,17 @@
 
 package xyz.springpoint.prison.integration;
 
+import ml.springpoint.springcore.integration.IntegrationAbstract;
 import ml.springpoint.springcore.integration.IntegrationFeature;
+import ml.springpoint.springcore.integration.vault.VaultIntegration;
+import xyz.springpoint.prison.integration.economy.EconomyIntegration;
+import xyz.springpoint.prison.integration.economy.EssentialsIntegration;
+import xyz.springpoint.prison.integration.economy.VaultEconomy;
+import xyz.springpoint.prison.integration.economy.iConomyIntegration;
+import xyz.springpoint.prison.integration.permission.GroupManagerIntegration;
+import xyz.springpoint.prison.integration.permission.PermissionIntegration;
+import xyz.springpoint.prison.integration.permission.PermissionsExIntegration;
+import xyz.springpoint.prison.integration.permission.VaultPermission;
 
 /**
  * Attempts to integrate with the permissions
@@ -49,8 +59,67 @@ public class IntegrationManager {
     //  Initialization
     // =======================
 
+    public boolean initializeEconomy() {
+        // Essentials economy
+        EssentialsIntegration essentialsIntegration = new EssentialsIntegration();
+        if (tryIntegration(essentialsIntegration)) {
+            economy = essentialsIntegration;
+            return true;
+        }
+        // iConomy
+        iConomyIntegration iConomyIntegration = new iConomyIntegration();
+        if (tryIntegration(iConomyIntegration)) {
+            economy = iConomyIntegration;
+            return true;
+        }
+        // Vault fallback
+        VaultIntegration vaultIntegration = (VaultIntegration) integration.integrate("vault");
+        if (vaultIntegration == null) return false;
+        if (vaultIntegration.getEconomy() == null) return false;
+        else {
+            economy = new VaultEconomy(vaultIntegration.getEconomy());
+            return true;
+        }
+    }
+
+    public boolean initializePermissions() {
+        // PermissionsEx
+        PermissionsExIntegration permissionsExIntegration = new PermissionsExIntegration();
+        if (tryIntegration(permissionsExIntegration)) {
+            permission = permissionsExIntegration;
+            return true;
+        }
+        // GroupManager
+        GroupManagerIntegration groupManagerIntegration = new GroupManagerIntegration();
+        if (tryIntegration(groupManagerIntegration)) {
+            permission = groupManagerIntegration;
+            return true;
+        }
+        // Vault fallback
+        VaultIntegration vaultIntegration = (VaultIntegration) integration.integrate("vault");
+        if (vaultIntegration == null) return false;
+        if (vaultIntegration.getPermission() == null) return false;
+        else {
+            permission = new VaultPermission(vaultIntegration.getPermission());
+            return true;
+        }
+    }
+
+    private boolean tryIntegration(IntegrationAbstract toIntegrate) {
+        IntegrationAbstract retVal =
+                integration.add(toIntegrate.getPlugin(), toIntegrate).integrate(toIntegrate.getPlugin());
+        return retVal != null;
+    }
+
     // =======================
     //  Getters
     // =======================
 
+    public EconomyIntegration getEconomy() {
+        return economy;
+    }
+
+    public PermissionIntegration getPermission() {
+        return permission;
+    }
 }

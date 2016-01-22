@@ -15,37 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.springpoint.prison.integration;
+package xyz.springpoint.prison.integration.permission;
 
-import ml.springpoint.springcore.integration.IntegrationAbstract;
 import org.bukkit.entity.Player;
 
 /**
+ * For integrations dealing with permission plugins.
  * @author SirFaizdat
  */
-public class iConomyIntegration extends IntegrationAbstract implements EconomyIntegration {
+public interface PermissionIntegration {
 
-    public iConomyIntegration() {
-        super("iConomy");
-    }
+    String getPrimaryRank(Player player);
 
-    @Override
-    public double getBalance(Player player) {
-        return 0;
-    }
+    String[] getRanks(Player player);
 
-    @Override
-    public void setBalance(Player player, double amount) {
+    void setRank(Player player, String rankName);
 
-    }
-
-    @Override
-    public void addBalance(Player player, double amount) {
-
-    }
-
-    @Override
-    public void removeBalance(Player player, double amount) {
-
-    }
 }

@@ -15,20 +15,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.springpoint.prison.integration;
+package xyz.springpoint.prison.integration.permission;
 
+import ml.springpoint.springcore.integration.IntegrationAbstract;
 import org.bukkit.entity.Player;
 
 /**
- * For integrations dealing with permission plugins.
+ * Integrate with PermissionsEx. This class is only meant to be
+ * instantiated when it is added to the integration feature upon enable.
+ *
  * @author SirFaizdat
  */
-public interface PermissionIntegration {
+public class PermissionsExIntegration extends IntegrationAbstract implements PermissionIntegration {
 
-    String getPrimaryRank(Player player);
+    public PermissionsExIntegration() {
+        super("PermissionsEx");
+    }
 
-    String[] getRanks(Player player);
+    @Override
+    public String getPrimaryRank(Player player) {
+        return null;
+    }
 
-    void setRank(Player player, String rankName);
+    @Override
+    public String[] getRanks(Player player) {
+        return new String[0];
+    }
 
+    @Override
+    public void setRank(Player player, String rankName) {
+
+    }
 }
