@@ -1,0 +1,6 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+author: Springpoint
+website: ${project.url}
+main: xyz.springpoint.prison.Prison
