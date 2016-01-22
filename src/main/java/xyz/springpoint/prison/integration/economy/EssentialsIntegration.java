@@ -17,8 +17,13 @@
 
 package xyz.springpoint.prison.integration.economy;
 
+import com.earth2me.essentials.api.Economy;
+import com.earth2me.essentials.api.NoLoanPermittedException;
+import com.earth2me.essentials.api.UserDoesNotExistException;
 import ml.springpoint.springcore.integration.IntegrationAbstract;
 import org.bukkit.entity.Player;
+
+import java.math.BigDecimal;
 
 /**
  * @author SirFaizdat
@@ -31,22 +36,37 @@ public class EssentialsIntegration extends IntegrationAbstract implements Econom
 
     @Override
     public double getBalance(Player player) {
-        return 0;
+        try {
+            return Economy.getMoney(player.getName());
+        } catch (UserDoesNotExistException e) {
+            return -1.0D;
+        }
     }
 
     @Override
     public void setBalance(Player player, double amount) {
-
+        try {
+            Economy.setMoney(player.getName(), new BigDecimal(amount));
+        } catch (UserDoesNotExistException | NoLoanPermittedException ignored) {
+        }
     }
 
     @Override
     public void addBalance(Player player, double amount) {
-
+        try {
+            Economy.add(player.getName(), new BigDecimal(amount));
+        } catch (UserDoesNotExistException | NoLoanPermittedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void removeBalance(Player player, double amount) {
-
+        try {
+            Economy.subtract(player.getName(), amount);
+        } catch (UserDoesNotExistException | NoLoanPermittedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

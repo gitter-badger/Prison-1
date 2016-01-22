@@ -68,6 +68,36 @@
             <version>1.5</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Economy -->
+        <dependency>
+            <groupId>net.ess3</groupId>
+            <artifactId>api</artifactId> <!-- Essentials -->
+            <version>2.0.1</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/eco/EssentialsX-2.0.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.iCO6</groupId>
+            <artifactId>iConomy</artifactId>
+            <version>6.0.10b</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/eco/iConomy-6.0.10b.jar</systemPath>
+        </dependency>
+        <!-- Permissions -->
+        <dependency>
+            <groupId>ru.tekhode</groupId>
+            <artifactId>permissionsex</artifactId>
+            <version>1.23.3</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/perm/PermissionsEx-1.23.3.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.anjocaido</groupId>
+            <artifactId>groupmanager</artifactId>
+            <version>gm-final</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/perm/EssentialsGroupManager-final.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>

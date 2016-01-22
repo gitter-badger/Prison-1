@@ -32,13 +32,29 @@ public class VaultPermission implements PermissionIntegration {
     }
 
     @Override
+    public String getPrimaryRank(Player player, String world) {
+        return permission.getPrimaryGroup(world, player);
+    }
+
+    @Override
     public String getPrimaryRank(Player player) {
         return permission.getPrimaryGroup(player);
     }
 
     @Override
+    public String[] getRanks(Player player, String world) {
+        return permission.getPlayerGroups(world, player);
+    }
+
+    @Override
     public String[] getRanks(Player player) {
         return permission.getPlayerGroups(player);
+    }
+
+    @Override
+    public void setRank(Player player, String rankName, String world) {
+        permission.playerRemoveGroup(world, player, getPrimaryRank(player, world));
+        permission.playerAddGroup(world, player, rankName);
     }
 
     @Override

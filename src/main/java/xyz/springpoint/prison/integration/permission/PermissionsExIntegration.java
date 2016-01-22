@@ -18,7 +18,10 @@
 package xyz.springpoint.prison.integration.permission;
 
 import ml.springpoint.springcore.integration.IntegrationAbstract;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import ru.tehkode.permissions.PermissionUser;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 /**
  * Integrate with PermissionsEx. This class is only meant to be
@@ -28,22 +31,44 @@ import org.bukkit.entity.Player;
  */
 public class PermissionsExIntegration extends IntegrationAbstract implements PermissionIntegration {
 
+    PermissionsEx perms;
+
     public PermissionsExIntegration() {
         super("PermissionsEx");
+        perms = (PermissionsEx) Bukkit.getServer().getPluginManager().getPlugin("PermissionsEx");
+    }
+
+    @Override
+    public String getPrimaryRank(Player player, String world) {
+        return perms.getPermissionsManager().getUser(player).getGroupNames(world)[0];
     }
 
     @Override
     public String getPrimaryRank(Player player) {
-        return null;
+        return perms.getPermissionsManager().getUser(player).getGroupNames()[0];
+    }
+
+    @Override
+    public String[] getRanks(Player player, String world) {
+        return perms.getPermissionsManager().getUser(player).getGroupNames(world);
     }
 
     @Override
     public String[] getRanks(Player player) {
-        return new String[0];
+        return perms.getPermissionsManager().getUser(player).getGroupNames();
+    }
+
+    @Override
+    public void setRank(Player player, String rankName, String world) {
+        // Is this the right way to do it?
+        perms.getPermissionsManager().getUser(player).removeGroup(getPrimaryRank(player), world);
+        perms.getPermissionsManager().getUser(player).addGroup(rankName, world);
     }
 
     @Override
     public void setRank(Player player, String rankName) {
-
+        // Is this the right way to do it?
+        perms.getPermissionsManager().getUser(player).removeGroup(getPrimaryRank(player));
+        perms.getPermissionsManager().getUser(player).addGroup(rankName);
     }
 }

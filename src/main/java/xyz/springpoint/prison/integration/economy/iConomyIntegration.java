@@ -17,35 +17,52 @@
 
 package xyz.springpoint.prison.integration.economy;
 
+import com.iCo6.system.Accounts;
+import com.iCo6.system.Holdings;
 import ml.springpoint.springcore.integration.IntegrationAbstract;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import com.iCo6.iConomy;
 
 /**
  * @author SirFaizdat
  */
 public class iConomyIntegration extends IntegrationAbstract implements EconomyIntegration {
 
+    iConomy economy;
+    Accounts accounts;
+
     public iConomyIntegration() {
         super("iConomy");
+
+        economy = (iConomy) Bukkit.getServer().getPluginManager().getPlugin("iConomy");
+        accounts = new Accounts();
     }
 
     @Override
     public double getBalance(Player player) {
-        return 0;
+        if (accounts.exists(player.getName())) {
+            return accounts.get(player.getName()).getHoldings().getBalance();
+        } else {
+            return -1.0D;
+        }
     }
 
     @Override
     public void setBalance(Player player, double amount) {
-
+        Holdings holdings = accounts.get(player.getName()).getHoldings();
+        holdings.setBalance(amount);
     }
 
     @Override
     public void addBalance(Player player, double amount) {
-
+        Holdings holdings = accounts.get(player.getName()).getHoldings();
+        holdings.add(amount);
     }
 
     @Override
     public void removeBalance(Player player, double amount) {
-
+        Holdings holdings = accounts.get(player.getName()).getHoldings();
+        if (holdings.hasEnough(amount)) holdings.subtract(amount);
     }
 }

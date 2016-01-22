@@ -18,6 +18,8 @@
 package xyz.springpoint.prison.integration.permission;
 
 import ml.springpoint.springcore.integration.IntegrationAbstract;
+import org.anjocaido.groupmanager.GroupManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 /**
@@ -25,22 +27,42 @@ import org.bukkit.entity.Player;
  */
 public class GroupManagerIntegration extends IntegrationAbstract implements PermissionIntegration {
 
+    GroupManager perms;
+
     public GroupManagerIntegration() {
         super("GroupManager");
+        perms = (GroupManager) Bukkit.getServer().getPluginManager().getPlugin("GroupManager");
+    }
+
+    @Override
+    public String getPrimaryRank(Player player, String world) {
+        return perms.getWorldsHolder().getWorldData(world).getUser(player.getUniqueId().toString(), player.getName()).getGroupName();
     }
 
     @Override
     public String getPrimaryRank(Player player) {
-        return null;
+        return perms.getWorldsHolder().getDefaultWorld().getUser(player.getUniqueId().toString(), player.getName()).getGroupName();
+    }
+
+    @Override
+    public String[] getRanks(Player player, String world) {
+        return new String[]{getPrimaryRank(player, world)};
     }
 
     @Override
     public String[] getRanks(Player player) {
-        return new String[0];
+        return new String[]{getPrimaryRank(player)};
+    }
+
+    @Override
+    public void setRank(Player player, String rankName, String world) {
+        perms.getWorldsHolder().getWorldData(world).getUser(player.getUniqueId().toString(), player.getName())
+                .setGroup(GroupManager.getGlobalGroups().getGroup(rankName));
     }
 
     @Override
     public void setRank(Player player, String rankName) {
-
+        perms.getWorldsHolder().getDefaultWorld().getUser(player.getUniqueId().toString(), player.getName())
+                .setGroup(GroupManager.getGlobalGroups().getGroup(rankName));
     }
 }

@@ -21,13 +21,20 @@ import org.bukkit.entity.Player;
 
 /**
  * For integrations dealing with permission plugins.
+ *
  * @author SirFaizdat
  */
 public interface PermissionIntegration {
 
+    String getPrimaryRank(Player player, String world);
+
     String getPrimaryRank(Player player);
 
+    String[] getRanks(Player player, String world);
+
     String[] getRanks(Player player);
+
+    void setRank(Player player, String rankName, String world);
 
     void setRank(Player player, String rankName);
 
