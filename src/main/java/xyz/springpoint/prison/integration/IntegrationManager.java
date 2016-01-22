@@ -20,6 +20,7 @@ package xyz.springpoint.prison.integration;
 import ml.springpoint.springcore.integration.IntegrationAbstract;
 import ml.springpoint.springcore.integration.IntegrationFeature;
 import ml.springpoint.springcore.integration.vault.VaultIntegration;
+import org.bukkit.Bukkit;
 import xyz.springpoint.prison.integration.economy.EconomyIntegration;
 import xyz.springpoint.prison.integration.economy.EssentialsIntegration;
 import xyz.springpoint.prison.integration.economy.VaultEconomy;
@@ -61,53 +62,71 @@ public class IntegrationManager {
 
     public boolean initializeEconomy() {
         // Essentials economy
-        EssentialsIntegration essentialsIntegration = new EssentialsIntegration();
-        if (tryIntegration(essentialsIntegration)) {
-            economy = essentialsIntegration;
-            return true;
+        if(hasPlugin("Essentials")) {
+            EssentialsIntegration essentialsIntegration = new EssentialsIntegration();
+            if (tryIntegration(essentialsIntegration)) {
+                economy = essentialsIntegration;
+                return true;
+            }
         }
         // iConomy
-        iConomyIntegration iConomyIntegration = new iConomyIntegration();
-        if (tryIntegration(iConomyIntegration)) {
-            economy = iConomyIntegration;
-            return true;
+        if(hasPlugin("iConomy")) {
+            iConomyIntegration iConomyIntegration = new iConomyIntegration();
+            if (tryIntegration(iConomyIntegration)) {
+                economy = iConomyIntegration;
+                return true;
+            }
         }
         // Vault fallback
-        VaultIntegration vaultIntegration = (VaultIntegration) integration.integrate("vault");
-        if (vaultIntegration == null) return false;
-        if (vaultIntegration.getEconomy() == null) return false;
-        else {
-            economy = new VaultEconomy(vaultIntegration.getEconomy());
-            return true;
+        if(hasPlugin("Vault")) {
+            VaultIntegration vaultIntegration = (VaultIntegration) integration.integrate("vault");
+            if (vaultIntegration == null) return false;
+            if (vaultIntegration.getEconomy() == null) return false;
+            else {
+                economy = new VaultEconomy(vaultIntegration.getEconomy());
+                return true;
+            }
         }
+        return false;
     }
 
     public boolean initializePermissions() {
         // PermissionsEx
-        PermissionsExIntegration permissionsExIntegration = new PermissionsExIntegration();
-        if (tryIntegration(permissionsExIntegration)) {
-            permission = permissionsExIntegration;
-            return true;
+        if(hasPlugin("PermissionsEx")) {
+            PermissionsExIntegration permissionsExIntegration = new PermissionsExIntegration();
+            if (tryIntegration(permissionsExIntegration)) {
+                permission = permissionsExIntegration;
+                return true;
+            }
         }
         // GroupManager
-        GroupManagerIntegration groupManagerIntegration = new GroupManagerIntegration();
-        if (tryIntegration(groupManagerIntegration)) {
-            permission = groupManagerIntegration;
-            return true;
+        if(hasPlugin("GroupManager")) {
+            GroupManagerIntegration groupManagerIntegration = new GroupManagerIntegration();
+            if (tryIntegration(groupManagerIntegration)) {
+                permission = groupManagerIntegration;
+                return true;
+            }
         }
         // Vault fallback
-        VaultIntegration vaultIntegration = (VaultIntegration) integration.integrate("vault");
-        if (vaultIntegration == null) return false;
-        if (vaultIntegration.getPermission() == null) return false;
-        else {
-            permission = new VaultPermission(vaultIntegration.getPermission());
-            return true;
+        if(hasPlugin("Vault")) {
+            VaultIntegration vaultIntegration = (VaultIntegration) integration.integrate("vault");
+            if (vaultIntegration == null) return false;
+            if (vaultIntegration.getPermission() == null) return false;
+            else {
+                permission = new VaultPermission(vaultIntegration.getPermission());
+                return true;
+            }
         }
+        return false;
+    }
+
+    private boolean hasPlugin(String plugin) {
+        return Bukkit.getPluginManager().getPlugin(plugin) != null;
     }
 
     private boolean tryIntegration(IntegrationAbstract toIntegrate) {
         IntegrationAbstract retVal =
-                integration.add(toIntegrate.getPlugin(), toIntegrate).integrate(toIntegrate.getPlugin());
+                integration.add(toIntegrate.getPlugin().toLowerCase(), toIntegrate).integrate(toIntegrate.getPlugin().toLowerCase());
         return retVal != null;
     }
 

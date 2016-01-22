@@ -4,3 +4,5 @@ description: ${project.description}
 author: Springpoint
 website: ${project.url}
 main: xyz.springpoint.prison.Prison
+depend: [SpringCore]
+softdepend: [Vault, Essentials, iConomy, GroupManager, PermissionsEx]

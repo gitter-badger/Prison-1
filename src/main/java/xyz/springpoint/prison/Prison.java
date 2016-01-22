@@ -41,6 +41,7 @@ public class Prison extends SpringPlugin {
     @Override
     protected boolean enable() {
         // Tell SpringCore which parts of it we want to use
+        setLogPrefix("&8[&cPrison&8]");
         use("modules", "commands", "integration", "menus");
 
         commands = (CommandFeature) getFeatureManager().get("commands");
@@ -56,7 +57,16 @@ public class Prison extends SpringPlugin {
     private boolean initIntegration() {
         IntegrationFeature integrationFeature = (IntegrationFeature) getFeatureManager().get("integration");
         integration = new IntegrationManager(integrationFeature);
-        return integration.initializePermissions() && integration.initializeEconomy();
+
+        if (!integration.initializePermissions()) {
+            log("&cError: &7No permissions plugin found.");
+            return false;
+        }
+        if (!integration.initializeEconomy()) {
+            log("&cError: &7No economy plugin found.");
+            return false;
+        }
+        return true;
     }
 
 }
