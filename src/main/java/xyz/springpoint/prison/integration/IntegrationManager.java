@@ -62,7 +62,7 @@ public class IntegrationManager {
 
     public boolean initializeEconomy() {
         // Essentials economy
-        if(hasPlugin("Essentials")) {
+        if (hasPlugin("Essentials")) {
             EssentialsIntegration essentialsIntegration = new EssentialsIntegration();
             if (tryIntegration(essentialsIntegration)) {
                 economy = essentialsIntegration;
@@ -70,7 +70,7 @@ public class IntegrationManager {
             }
         }
         // iConomy
-        if(hasPlugin("iConomy")) {
+        if (hasPlugin("iConomy")) {
             iConomyIntegration iConomyIntegration = new iConomyIntegration();
             if (tryIntegration(iConomyIntegration)) {
                 economy = iConomyIntegration;
@@ -78,9 +78,10 @@ public class IntegrationManager {
             }
         }
         // Vault fallback
-        if(hasPlugin("Vault")) {
-            VaultIntegration vaultIntegration = (VaultIntegration) integration.integrate("vault");
-            if (vaultIntegration == null) return false;
+        if (hasPlugin("Vault")) {
+            IntegrationAbstract integ = integration.integrate("vault");
+            if (integ == null) return false;
+            VaultIntegration vaultIntegration = (VaultIntegration) integ;
             if (vaultIntegration.getEconomy() == null) return false;
             else {
                 economy = new VaultEconomy(vaultIntegration.getEconomy());
@@ -92,7 +93,7 @@ public class IntegrationManager {
 
     public boolean initializePermissions() {
         // PermissionsEx
-        if(hasPlugin("PermissionsEx")) {
+        if (hasPlugin("PermissionsEx")) {
             PermissionsExIntegration permissionsExIntegration = new PermissionsExIntegration();
             if (tryIntegration(permissionsExIntegration)) {
                 permission = permissionsExIntegration;
@@ -100,7 +101,7 @@ public class IntegrationManager {
             }
         }
         // GroupManager
-        if(hasPlugin("GroupManager")) {
+        if (hasPlugin("GroupManager")) {
             GroupManagerIntegration groupManagerIntegration = new GroupManagerIntegration();
             if (tryIntegration(groupManagerIntegration)) {
                 permission = groupManagerIntegration;
@@ -108,9 +109,10 @@ public class IntegrationManager {
             }
         }
         // Vault fallback
-        if(hasPlugin("Vault")) {
-            VaultIntegration vaultIntegration = (VaultIntegration) integration.integrate("vault");
-            if (vaultIntegration == null) return false;
+        if (hasPlugin("Vault")) {
+            IntegrationAbstract integ = integration.integrate("vault");
+            if (integ == null) return false;
+            VaultIntegration vaultIntegration = (VaultIntegration) integ;
             if (vaultIntegration.getPermission() == null) return false;
             else {
                 permission = new VaultPermission(vaultIntegration.getPermission());

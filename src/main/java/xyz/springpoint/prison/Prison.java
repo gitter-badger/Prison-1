@@ -20,7 +20,10 @@ package xyz.springpoint.prison;
 import ml.springpoint.springcore.SpringPlugin;
 import ml.springpoint.springcore.command.CommandFeature;
 import ml.springpoint.springcore.integration.IntegrationFeature;
+import ml.springpoint.springcore.module.ModuleFeature;
 import xyz.springpoint.prison.integration.IntegrationManager;
+import xyz.springpoint.prison.integration.WorldEditIntegration;
+import xyz.springpoint.prison.mines.Mines;
 
 /**
  * @author SirFaizdat
@@ -31,8 +34,11 @@ public class Prison extends SpringPlugin {
     //  Fields
     // =======================
 
-    CommandFeature commands; // Command framework system
-    IntegrationManager integration; // Permissions and economy integration
+    private static Prison instance;
+    public CommandFeature commands; // Command framework system
+    public ModuleFeature modules; // Module system
+    public IntegrationFeature integrationFeature; // The actual integration feature
+    public IntegrationManager integration; // Permissions and economy integration
 
     // =======================
     //  Override
@@ -40,12 +46,16 @@ public class Prison extends SpringPlugin {
 
     @Override
     protected boolean enable() {
+        instance = this;
         // Tell SpringCore which parts of it we want to use
         setLogPrefix("&8[&cPrison&8]");
         use("modules", "commands", "integration", "menus");
 
         commands = (CommandFeature) getFeatureManager().get("commands");
         if (!initIntegration()) return false; // Disable if no perm/eco plugin found
+
+        modules = (ModuleFeature) getFeatureManager().get("modules");
+        modules.load(new Mines());
 
         return true;
     }
@@ -55,8 +65,11 @@ public class Prison extends SpringPlugin {
     // =======================
 
     private boolean initIntegration() {
-        IntegrationFeature integrationFeature = (IntegrationFeature) getFeatureManager().get("integration");
+        integrationFeature = (IntegrationFeature) getFeatureManager().get("integration");
         integration = new IntegrationManager(integrationFeature);
+
+        // Register WorldEdit, but don't integrate yet.
+        integrationFeature.add("worldedit", new WorldEditIntegration());
 
         if (!integration.initializePermissions()) {
             log("&cError: &7No permissions plugin found.");
@@ -69,4 +82,11 @@ public class Prison extends SpringPlugin {
         return true;
     }
 
+    // =======================
+    //  Getters
+    // =======================
+
+    public static Prison get() {
+        return instance;
+    }
 }

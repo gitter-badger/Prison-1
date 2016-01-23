@@ -31,6 +31,10 @@ public class GroupManagerIntegration extends IntegrationAbstract implements Perm
 
     public GroupManagerIntegration() {
         super("GroupManager");
+    }
+
+    @Override
+    public void activate() {
         perms = (GroupManager) Bukkit.getServer().getPluginManager().getPlugin("GroupManager");
     }
 

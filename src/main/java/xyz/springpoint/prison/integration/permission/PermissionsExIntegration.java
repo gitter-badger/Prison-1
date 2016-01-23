@@ -35,6 +35,10 @@ public class PermissionsExIntegration extends IntegrationAbstract implements Per
 
     public PermissionsExIntegration() {
         super("PermissionsEx");
+    }
+
+    @Override
+    public void activate() {
         perms = (PermissionsEx) Bukkit.getServer().getPluginManager().getPlugin("PermissionsEx");
     }
 

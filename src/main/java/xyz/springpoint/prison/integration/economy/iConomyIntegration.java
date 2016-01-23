@@ -34,7 +34,10 @@ public class iConomyIntegration extends IntegrationAbstract implements EconomyIn
 
     public iConomyIntegration() {
         super("iConomy");
+    }
 
+    @Override
+    public void activate() {
         economy = (iConomy) Bukkit.getServer().getPluginManager().getPlugin("iConomy");
         accounts = new Accounts();
     }
