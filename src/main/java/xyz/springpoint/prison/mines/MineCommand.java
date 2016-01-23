@@ -21,6 +21,13 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 import ml.springpoint.springcore.command.Command;
 import ml.springpoint.springcore.command.CommandArgs;
 import org.bukkit.entity.Player;
+import xyz.springpoint.prison.Action;
+import xyz.springpoint.prison.Prison;
+import xyz.springpoint.prison.mines.actions.CreateAction;
+import xyz.springpoint.prison.mines.actions.ResetAction;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author SirFaizdat
@@ -31,62 +38,47 @@ public class MineCommand {
     //  Fields
     // =======================
 
-    private Mines mines;
+    private Map<String, Action> actions;
 
     // =======================
     //  Constructor
     // =======================
 
     public MineCommand(Mines mines) {
-        this.mines = mines;
+        actions = new HashMap<>();
+        actions.put("create", new CreateAction(mines));
+        actions.put("reset", new ResetAction(mines));
     }
 
     // =======================
     //  Commands
     // =======================
 
-    @Command(name = "mines", permission = "prison.mines", description = "Manage the mines module.", usage = "/mines")
+    @Command(name = "mines", permission = "prison.mines", aliases = {"mine"}, description = "Manage the mines module.", usage = "/mines <mine> <action> [args...]", minArgs = 2)
     public void baseCommand(CommandArgs args) {
-        args.getSender().sendMessage("Use the command properly!");
+        // Handles the Actions now.
+        String mineName = args.getArgs(0);
+        String actionName = args.getArgs(1);
+        String[] newArgs = shortenArray(args.getArgs(), 2); // Remove args 0 and 1 (name and action)
+        Action action = actions.get(actionName.toLowerCase());
+        if (action == null) Prison.get().getMessages().send(args.getSender(), "action_not_found", actionName);
+        else action.run(mineName, args.getSender(), newArgs);
     }
 
-    @Command(name = "mines.create", permission = "prison.mines.create", description = "Create a new mine.", usage = "/mines create <name>", minArgs = 1, inGameOnly = true)
-    public void createMine(CommandArgs args) {
-        Player player = (Player) args.getSender();
-        // Get selection
-        Selection sel = mines.worldEdit.getSelection(player);
-        if (sel == null) {
-            mines.getMessages().send(player, "selection_needed");
-            return;
-        }
-        // Get name
-        String name = args.getArgs(0);
-        if (mines.getMine(name) != null) {
-            mines.getMessages().send(player, "mine_exists", name);
-            return;
-        }
-        // Make the mine
-        Mine m = new Mine();
-        m.name = name;
-        m.world = sel.getWorld().getName();
-        m.min = sel.getMinimumPoint();
-        m.max = sel.getMaximumPoint();
-        mines.add(m); // This also saves it for us
-        // Done!
-        mines.getMessages().send(player, "mine_created", name);
+    @Command(name = "mines.help", permission = "prison.mines", aliases = {"mine.help"}, description= "Help using the /mines command.", usage = "/mines help")
+    public void helpCommand(CommandArgs args) {
+        args.getSender().sendMessage("To be created.");
     }
 
-    @Command(name = "mines.reset", permission = "prison.mines.reset", description = "Reset a mine.", usage = "/mines reset <name>", minArgs = 1, inGameOnly = true)
-    public void resetMine(CommandArgs args) {
-        // Get the mine (after making sure it exists of course)
-        String name = args.getArgs(0);
-        Mine m = mines.getMine(name);
-        if (m == null) {
-            mines.getMessages().send(args.getSender(), "mine_does_not_exist", name);
-            return;
-        }
-        mines.reset(m); // Reset and done
-        mines.getMessages().send(args.getSender(), "mine_manual_reset", name);
+    // =======================
+    //  Utilities
+    // =======================
+
+    private String[] shortenArray(String[] oldArray, int toShorten) {
+        int n = oldArray.length - toShorten;
+        String[] newArray = new String[n];
+        System.arraycopy(oldArray, toShorten, newArray, 0, n);
+        return newArray;
     }
 
 }

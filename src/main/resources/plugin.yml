@@ -6,3 +6,7 @@ website: ${project.url}
 main: xyz.springpoint.prison.Prison
 depend: [SpringCore]
 softdepend: [Vault, Essentials, iConomy, GroupManager, PermissionsEx]
+permissions:
+  prison.mines:
+    description: Manage the mines module (i.e. use /mines)
+    default: op

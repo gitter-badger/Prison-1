@@ -36,6 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The main mines module.
+ * Contains methods for dealing with mines (such as reset(), load(), save(), etc.)
+ *
  * @author SirFaizdat
  */
 @ModuleDef(name = "Mines")
@@ -45,7 +48,7 @@ public class Mines extends Module {
     //  Fields
     // =======================
 
-    WorldEditIntegration worldEdit;
+    public WorldEditIntegration worldEdit;
     File savesFolder;
     private List<Mine> mines;
 
@@ -89,6 +92,7 @@ public class Mines extends Module {
     }
 
     private void loadAll() {
+        // Only files that are of the type we want (.mine.json)
         File[] files = savesFolder.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -96,9 +100,7 @@ public class Mines extends Module {
             }
         });
 
-        for(File file : files) {
-            mines.add(load(file));
-        }
+        for (File file : files) mines.add(load(file));
 
         Prison.get().log("&7Loaded &b%d&7 mines.", mines.size());
     }
@@ -107,16 +109,26 @@ public class Mines extends Module {
     //  Methods
     // =======================
 
+    /**
+     * Adds a mine to the list, and saves it.
+     *
+     * @param m The Mine object.
+     */
     public void add(Mine m) {
         save(m, new File(savesFolder, m.name + ".mine.json"));
         mines.add(m);
     }
 
+    /**
+     * Load a mine from a file.
+     *
+     * @param file The mine's file. It must exist, and it must be of the type .mine.json.
+     * @return The Mine's object, or null if it failed (it will also print an error message if it fails).
+     */
     public Mine load(File file) {
         try {
             String json = new String(Files.readAllBytes(Paths.get(file.getPath())));
-            Mine m = GsonFactory.getCompactGson().fromJson(json, Mine.class);
-            return m;
+            return GsonFactory.getCompactGson().fromJson(json, Mine.class);
         } catch (IOException e) {
             Prison.get().log("&cError: &7Failed to read mine file &c%s&7.", file.getPath());
             e.printStackTrace();
@@ -124,6 +136,13 @@ public class Mines extends Module {
         }
     }
 
+    /**
+     * Save a mine to a file.
+     *
+     * @param m    The Mine object.
+     * @param file The file to save to.
+     * @return true if the save succeeded, false otherwise.
+     */
     public boolean save(Mine m, File file) {
         String json = GsonFactory.getPrettyGson().toJson(m);
         try {
@@ -137,6 +156,12 @@ public class Mines extends Module {
         return true;
     }
 
+    /**
+     * Reset a mine.
+     *
+     * @param m The Mine object of the mine to reset.
+     * @return true if the reset succeeded (normally it does), false otherwise.
+     */
     public boolean reset(Mine m) {
         // Store all the positions
         int minX = m.min.getBlockX();

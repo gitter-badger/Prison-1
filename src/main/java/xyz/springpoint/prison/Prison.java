@@ -51,8 +51,9 @@ public class Prison extends SpringPlugin {
         setLogPrefix("&8[&cPrison&8]");
         use("modules", "commands", "integration", "menus");
 
-        commands = (CommandFeature) getFeatureManager().get("commands");
+        if (!initMessages()) return false; // Disable if messages.json could not be loaded
         if (!initIntegration()) return false; // Disable if no perm/eco plugin found
+        commands = (CommandFeature) getFeatureManager().get("commands");
 
         modules = (ModuleFeature) getFeatureManager().get("modules");
         modules.load(new Mines());
@@ -80,6 +81,11 @@ public class Prison extends SpringPlugin {
             return false;
         }
         return true;
+    }
+
+    private boolean initMessages() {
+        getMessages().addDefault("action_not_found", "&cError: &7The action &c%s&7 does not exist.");
+        return getMessages().load();
     }
 
     // =======================

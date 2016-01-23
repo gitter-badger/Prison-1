@@ -15,22 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package xyz.springpoint.prison.mines;
+package xyz.springpoint.prison;
 
-import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 
 /**
  * @author SirFaizdat
  */
-public class Mine {
+public interface Action {
 
-    // =======================
-    //  Fields
-    // =======================
-
-    public String name;
-    public String world;
-    public Location min, max;
-    public long resetTime = -1; // -1 for sync
+    /**
+     * Runs this action.
+     *
+     * @param actor  The object this is being performed on. Usually, this would be the String name
+     *               of an object.
+     * @param sender The CommandSender running this action.
+     * @param args   Any additional arguments.
+     */
+    void run(Object actor, CommandSender sender, String... args);
 
 }
