@@ -88,6 +88,7 @@ public class Mines extends Module {
         getMessages().addDefault("mine_does_not_exist", "&cError: &7A mine called &c%s&7 does not exist.");
         getMessages().addDefault("mine_created", "&aSuccess: &7Created a mine called &a%s&7.");
         getMessages().addDefault("mine_manual_reset", "&aSuccess: &7Reset the mine &a%s&7.");
+        getMessages().addDefault("mine_deleted", "&aSuccess: &7Deleted the mine &a%s&7.");
         return getMessages().load();
     }
 
@@ -154,6 +155,10 @@ public class Mines extends Module {
             return false;
         }
         return true;
+    }
+
+    public boolean delete(Mine m) {
+        return mines.remove(m) && new File(savesFolder, m.name + ".mine.json").delete();
     }
 
     /**

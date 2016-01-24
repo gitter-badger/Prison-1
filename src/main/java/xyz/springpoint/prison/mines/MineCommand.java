@@ -20,13 +20,17 @@ package xyz.springpoint.prison.mines;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import ml.springpoint.springcore.command.Command;
 import ml.springpoint.springcore.command.CommandArgs;
+import ml.springpoint.springcore.utils.Txt;
 import org.bukkit.entity.Player;
 import xyz.springpoint.prison.Action;
 import xyz.springpoint.prison.Prison;
 import xyz.springpoint.prison.mines.actions.CreateAction;
+import xyz.springpoint.prison.mines.actions.DeleteAction;
 import xyz.springpoint.prison.mines.actions.ResetAction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,15 +43,26 @@ public class MineCommand {
     // =======================
 
     private Map<String, Action> actions;
+    private String[] helpMessages;
 
     // =======================
     //  Constructor
     // =======================
 
     public MineCommand(Mines mines) {
+        // Register actions
         actions = new HashMap<>();
         actions.put("create", new CreateAction(mines));
         actions.put("reset", new ResetAction(mines));
+        actions.put("delete", new DeleteAction(mines));
+
+        // Construct help screen
+        helpMessages = new String[actions.size()];
+        int i = 0; // index
+        for (Map.Entry<String, Action> action : actions.entrySet()) {
+            helpMessages[i] = Txt.color("&b/mine <mine> " + action.getKey() + " &8- &7" + action.getValue().description());
+            i++;
+        }
     }
 
     // =======================
@@ -65,9 +80,10 @@ public class MineCommand {
         else action.run(mineName, args.getSender(), newArgs);
     }
 
-    @Command(name = "mines.help", permission = "prison.mines", aliases = {"mine.help"}, description= "Help using the /mines command.", usage = "/mines help")
+    @Command(name = "mines.help", permission = "prison.mines", aliases = {"mine.help"}, description = "Help using the /mines command.", usage = "/mines help")
     public void helpCommand(CommandArgs args) {
-        args.getSender().sendMessage("To be created.");
+        args.getSender().sendMessage(Txt.color("&b/// &7Mines Help"));
+        args.getSender().sendMessage(helpMessages);
     }
 
     // =======================

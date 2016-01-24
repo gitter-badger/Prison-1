@@ -25,7 +25,7 @@ import xyz.springpoint.prison.mines.Mines;
 /**
  * @author SirFaizdat
  */
-public class ResetAction implements Action {
+public class DeleteAction implements Action {
 
     // =======================
     //  Fields
@@ -37,7 +37,7 @@ public class ResetAction implements Action {
     //  Constructor
     // =======================
 
-    public ResetAction(Mines mines) {
+    public DeleteAction(Mines mines) {
         this.mines = mines;
     }
 
@@ -53,13 +53,13 @@ public class ResetAction implements Action {
             mines.getMessages().send(sender, "mine_does_not_exist", (String) actor);
             return;
         }
-        mines.reset(m); // Reset and done
-        mines.getMessages().send(sender, "mine_manual_reset", m.name);
+        mines.delete(m);
+        mines.getMessages().send(sender, "mine_deleted", m.name);
     }
 
     @Override
     public String description() {
-        return "Reset a mine.";
+        return "Delete a mine and its save file.";
     }
 
 }

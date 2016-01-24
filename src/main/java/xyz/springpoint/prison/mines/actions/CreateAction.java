@@ -74,4 +74,9 @@ public class CreateAction implements Action {
         // Done!
         mines.getMessages().send(player, "mine_created", m.name);
     }
+
+    @Override
+    public String description() {
+        return "Create a new mine from your current WorldEdit selection.";
+    }
 }

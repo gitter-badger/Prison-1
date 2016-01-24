@@ -34,4 +34,9 @@ public interface Action {
      */
     void run(Object actor, CommandSender sender, String... args);
 
+    /**
+     * @return A description of what the action does.
+     */
+    String description();
+
 }
