@@ -24,8 +24,11 @@ import ml.springpoint.springcore.module.ModuleFeature;
 import xyz.springpoint.prison.integration.IntegrationManager;
 import xyz.springpoint.prison.integration.WorldEditIntegration;
 import xyz.springpoint.prison.mines.Mines;
+import xyz.springpoint.prison.ranks.Ranks;
 
 /**
+ * Main plugin class. Initializes everything.
+ *
  * @author SirFaizdat
  */
 public class Prison extends SpringPlugin {
@@ -57,6 +60,7 @@ public class Prison extends SpringPlugin {
 
         modules = (ModuleFeature) getFeatureManager().get("modules");
         modules.load(new Mines());
+        modules.load(new Ranks());
 
         return true;
     }

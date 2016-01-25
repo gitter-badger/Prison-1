@@ -24,6 +24,7 @@ import ml.springpoint.springcore.module.ModuleDef;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import xyz.springpoint.prison.Prison;
+import xyz.springpoint.prison.Utils;
 import xyz.springpoint.prison.integration.WorldEditIntegration;
 
 import java.io.File;
@@ -101,9 +102,13 @@ public class Mines extends Module {
             }
         });
 
-        for (File file : files) mines.add(load(file));
+        for (File file : files) {
+            Mine m = load(file);
+            if(m == null) break;
+            mines.add(m);
+        }
 
-        Prison.get().log("&7Loaded &b%d&7 mines.", mines.size());
+        log("&7Loaded &b%d&7 mines.", mines.size());
     }
 
     // =======================
@@ -131,7 +136,7 @@ public class Mines extends Module {
             String json = new String(Files.readAllBytes(Paths.get(file.getPath())));
             return GsonFactory.getCompactGson().fromJson(json, Mine.class);
         } catch (IOException e) {
-            Prison.get().log("&cError: &7Failed to read mine file &c%s&7.", file.getPath());
+            log("&cError: &7Failed to read mine file &c%s&7.", file.getPath());
             e.printStackTrace();
             return null;
         }
@@ -146,15 +151,7 @@ public class Mines extends Module {
      */
     public boolean save(Mine m, File file) {
         String json = GsonFactory.getPrettyGson().toJson(m);
-        try {
-            FileWriter writer = new FileWriter(file);
-            writer.write(json);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+        return Utils.writeToFile(json, file);
     }
 
     public boolean delete(Mine m) {
