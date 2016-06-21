@@ -1,4 +1,6 @@
 # Prison 3
+
+[![Join the chat at https://gitter.im/Camouflage100/Prison](https://badges.gitter.im/Camouflage100/Prison.svg)](https://gitter.im/Camouflage100/Prison?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Prison 3 is a plugin for the Minecraft Spigot server platform that enables servers, big and small, to create amazing servers for the prison gametype.
 ## Links
 [Click here to go to the **Bukkit Page**](http://dev.bukkit.org/bukkit-plugins/mcprison/).
